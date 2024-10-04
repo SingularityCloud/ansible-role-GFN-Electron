@@ -1,6 +1,18 @@
 ---
 latest_release_tag: v2.1.2
 
-download_url: "https://github.com/hmlendea/gfn-electron/releases/download/{{ latest_release_tag }}/geforcenow-electron_{{ latest_release_tag }}_linux.zip"
+download_url: "https://github.com/hmlendea/gfn-electron/releases/download/{{ latest_release_tag }}/geforcenow-electron_{{ latest_release_tag | replace('v','') }}_linux.zip"
 
-to_dir: /opt/game/Nvidia-Geforce-Now
+base_dir: /opt/app
+
+to_dir: "{{ base_dir }}/Nvidia-Geforce-Now"
+
+file: "{{ to_dir }}/geforcenow-electron_{{ latest_release_tag | replace('v','') }}_linux.zip"
+
+extract_dir: "/opt/geforcenow-electron"
+
+desktop_file: "com.github.hmlendea.geforcenow-electron.desktop"
+
+icon_source: "{{ extract_dir }}/resources/app/icon.png"
+
+icon_dest: /usr/share/pixmaps/nvidia.png

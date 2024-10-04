@@ -2,15 +2,38 @@
 
 - name: Create a directory
   ansible.builtin.file:
-    path: "{{ to_dir }}"
+    path: "{{ item }}"
     state: directory
     mode: '0755'
     owner: "{{ ansible_env.USER }}"
     group: "{{ ansible_env.USER }}"
   become: true
+  loop:
+  - "{{ to_dir }}"
+  - "{{ extract_dir }}"
 
 - name: Download Client
   ansible.builtin.get_url:
     url: "{{ download_url }}"
-    dest: "{{ to_dir }}"
+    dest: "{{ file }}"
     mode: '0440'
+
+- name: Extract
+  ansible.builtin.unarchive:
+    src: "{{ file }}"
+    dest: "{{ extract_dir }}"
+
+- name: Desktop file
+  ansible.builtin.copy:
+    src: "{{ extract_dir }}/{{ desktop_file }}"
+    dest: "/usr/share/applications/{{ desktop_file }}"
+    remote_src: yes
+  become: true
+
+- name: Desktop file Icon
+  ansible.builtin.copy:
+    src: "{{ icon_source }}"
+    dest: "{{ icon_dest }}"
+    remote_src: yes
+  become: true
+
